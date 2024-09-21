@@ -1,4 +1,4 @@
-import nspell from "https://cdn.jsdelivr.net/npm/nspell@2.1.5/+esm";
+import nspell from "./assets/js/nspell-lib/nspell/lib/index.js";
 import dictionary from "./assets/js/dictionary-es/index.js";
 const spell = nspell(dictionary);
 
