@@ -1,146 +1,21 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Corrector Ortográfico</title>
-    <style>
-        #container {
-            position: relative;
-            width: 500px;
-            margin: 20px 0;
-        }
-
-        #textoEntrada {
-            font-family: "Courier New", Courier, monospace;
-            width: 100%;
-            height: 150px;
-            font-size: 16px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-            resize: none;
-        }
-
-        #highlightedText {
-            font-family: "Courier New", Courier, monospace;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            font-size: 16px;
-            padding: 10px;
-            border: 1px solid transparent;
-            color: transparent;
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        .highlight-error {
-            text-decoration: underline;
-            text-decoration-color: red;
-            text-decoration-style: wavy;
-            color: inherit;
-            display: inline;
-        }
-
-        #modal {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: white;
-            border: 1px solid #ccc;
-            padding: 20px;
-            z-index: 1000;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        #modalOverlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-        }
-    </style>
-</head>
-<body>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
     <h1>Corrector Ortográfico</h1>
     <div id="container">
-        <div id="highlightedText" aria-hidden="true"></div>
-        <textarea id="textoEntrada" placeholder="Escribe aquí tu texto..."></textarea>
+      <div id="highlightedText" aria-hidden="true"></div>
+      <textarea id="textoEntrada" placeholder="Escribe aquí tu texto..."></textarea>
     </div>
+    <button id="revisarBtn">Revisar Texto</button>
     <div id="errores"></div>
 
-    <div id="modalOverlay"></div>
-    <div id="modal">
-        <h2>Errores Encontrados</h2>
-        <div id="modalContent"></div>
-        <button id="closeModal">Cerrar</button>
-    </div>
-
-    <script type="module">
-        import nspell from "https://cdn.jsdelivr.net/npm/nspell@2.1.5/+esm";
-        import dictionary from "./assets/js/dictionary-es/index.js";
-
-        const spell = nspell(dictionary);
-        const textarea = document.getElementById("textoEntrada");
-        const highlightedText = document.getElementById("highlightedText");
-        const modal = document.getElementById("modal");
-        const modalOverlay = document.getElementById("modalOverlay");
-        const modalContent = document.getElementById("modalContent");
-        const closeModal = document.getElementById("closeModal");
-
-        textarea.addEventListener("input", () => {
-            const texto = textarea.value;
-            const palabras = texto.split(/(\s+)/);
-            const errores = [];
-
-            const contenidoResaltado = palabras.map(palabra => {
-                const palabraSinEspacios = palabra.trim();
-                if (palabraSinEspacios && !spell.correct(palabraSinEspacios)) {
-                    const sugerencias = spell.suggest(palabraSinEspacios);
-                    errores.push({ palabra: palabraSinEspacios, sugerencias });
-                    return `<span class="highlight-error">${palabra}</span>`;
-                }
-                return palabra;
-            }).join("");
-
-            highlightedText.innerHTML = contenidoResaltado.replace(/\n/g, "<br>");
-
-            if (errores.length > 0) {
-                mostrarModal(errores);
-            } else {
-                modal.style.display = "none";
-                modalOverlay.style.display = "none";
-            }
-        });
-
-        function mostrarModal(errores) {
-            modalContent.innerHTML = "";
-            errores.forEach(error => {
-                const errorItem = document.createElement("div");
-                errorItem.innerText = `Palabra: "${error.palabra}" - Sugerencias: ${error.sugerencias.join(", ")}`;
-                modalContent.appendChild(errorItem);
-            });
-            modal.style.display = "block";
-            modalOverlay.style.display = "block";
-        }
-
-        closeModal.addEventListener("click", () => {
-            modal.style.display = "none";
-            modalOverlay.style.display = "none";
-        });
-    </script>
-</body>
+    <script type="module" src="./index.js"></script>
+  </body>
 </html>
